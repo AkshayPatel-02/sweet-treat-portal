@@ -29,6 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        console.log('Auth state changed:', event, session?.user?.id);
         setSession(session);
         setUser(session?.user ?? null);
         
@@ -39,6 +40,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }, 0);
         } else {
           setProfile(null);
+        }
+
+        // Handle initial sign-in from OAuth (like Google)
+        if (event === 'SIGNED_IN' && session?.user?.app_metadata?.provider !== 'email') {
+          toast({
+            title: "Sign in successful",
+            description: `Welcome${session?.user?.user_metadata?.full_name ? ` ${session.user.user_metadata.full_name}` : ''}!`,
+          });
         }
       }
     );
