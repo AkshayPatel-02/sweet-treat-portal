@@ -30,8 +30,10 @@ const AuthHeader = () => {
     await signOut();
   };
 
-  // Special admin access by email
-  const isAdmin = profile?.role === 'admin' || user?.email === 'admin@sweettreats.com';
+  // Special admin access by email - add the new email
+  const isAdmin = profile?.role === 'admin' || 
+                  user?.email === 'admin@sweettreats.com' || 
+                  user?.email === 'akshaypatelchadal@gmail.com';
 
   return (
     <div className="flex items-center space-x-2">

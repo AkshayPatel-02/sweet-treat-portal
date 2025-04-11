@@ -10,11 +10,12 @@ const AboutSection = () => {
   return (
     <section id="about" className="section-padding bg-background">
       <div className="container mx-auto px-4">
-        <div className="text-center max-w-3xl mx-auto mb-16"
-             ref={ref1 as React.RefObject<HTMLDivElement>}
-             className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-700 transform ${
-               isVisible1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-             }`}>
+        <div 
+          ref={ref1 as React.RefObject<HTMLDivElement>}
+          className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-700 transform ${
+            isVisible1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+          }`}
+        >
           <h2 className="text-bakery-800 mb-4">About Sweet Treats</h2>
           <p className="text-muted-foreground">
             We are passionate about creating delicious, handcrafted treats that bring joy to your special moments. 

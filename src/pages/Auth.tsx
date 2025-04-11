@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -40,6 +39,7 @@ const Auth = () => {
   const { signIn, signUp, session } = useAuth();
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const loginForm = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -62,22 +62,57 @@ const Auth = () => {
 
   useEffect(() => {
     if (session) {
+      console.log('User is authenticated, redirecting to /user');
       navigate('/user');
     }
   }, [session, navigate]);
 
+  useEffect(() => {
+    const hashParams = new URLSearchParams(location.hash.substring(1));
+    const accessToken = hashParams.get('access_token');
+    const refreshToken = hashParams.get('refresh_token');
+    
+    if (accessToken && refreshToken) {
+      console.log('OAuth tokens found in URL, setting session');
+      supabase.auth.setSession({ 
+        access_token: accessToken, 
+        refresh_token: refreshToken 
+      }).then(({ error }) => {
+        if (error) {
+          console.error('Error setting session:', error);
+          toast({
+            title: "Authentication Error",
+            description: error.message || "There was an error with your login",
+            variant: "destructive",
+          });
+        } else {
+          console.log('Session set successfully, redirecting');
+          toast({
+            title: "Authentication Successful",
+            description: "You have been logged in successfully",
+          });
+          navigate('/user');
+        }
+      });
+    }
+  }, [location, navigate, toast]);
+
   const handleLogin = async (data: LoginFormValues) => {
     setIsSubmitting(true);
+    console.log('Attempting login with:', data.email);
+    
     const { error } = await signIn(data.email, data.password);
     setIsSubmitting(false);
     
     if (error) {
+      console.error('Login failed:', error);
       toast({
         title: "Login failed",
         description: error.message || "Please check your credentials and try again",
         variant: "destructive",
       });
     } else {
+      console.log('Login successful, redirecting');
       toast({
         title: "Login successful",
         description: "Welcome back!",
@@ -100,8 +135,10 @@ const Auth = () => {
     } else {
       toast({
         title: "Signup successful",
-        description: "Please check your email to confirm your account",
+        description: "You can now login with your credentials",
       });
+      loginForm.setValue('email', data.email);
+      loginForm.setValue('password', data.password);
       setActiveTab('login');
     }
   };

@@ -16,8 +16,10 @@ const Admin = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
 
-  // Check if user is admin - this is the special email that has admin access
-  const isAdmin = profile?.role === 'admin' || user?.email === 'admin@sweettreats.com';
+  // Check if user is admin - include the additional email
+  const isAdmin = profile?.role === 'admin' || 
+                  user?.email === 'admin@sweettreats.com' || 
+                  user?.email === 'akshaypatelchadal@gmail.com';
 
   if (loading) {
     return (

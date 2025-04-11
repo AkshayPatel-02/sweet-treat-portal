@@ -68,6 +68,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const fetchProfile = async (userId: string) => {
     try {
+      console.log('Fetching profile for user:', userId);
       const { data, error } = await supabase
         .from('profiles')
         .select('*')
@@ -78,7 +79,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         console.error('Error fetching profile:', error);
         return;
       }
-
+      
+      console.log('Profile data:', data);
       setProfile(data as Profile);
     } catch (error) {
       console.error('Error fetching profile:', error);
@@ -93,9 +95,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signIn = async (email: string, password: string) => {
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      console.log('Signing in with email:', email);
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      
+      if (error) {
+        console.error('Sign in error:', error);
+        toast({
+          title: "Error signing in",
+          description: error.message || "Unknown error occurred",
+          variant: "destructive"
+        });
+      } else {
+        console.log('Sign in successful, session:', data.session);
+        toast({
+          title: "Sign in successful",
+          description: "Welcome back!",
+        });
+      }
+      
       return { error };
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Unexpected error during sign in:', error);
       toast({
         title: "Error signing in",
         description: error instanceof Error ? error.message : "Unknown error occurred",
@@ -107,6 +127,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signUp = async (email: string, password: string, firstName: string, lastName: string) => {
     try {
+      console.log('Signing up with email:', email);
       const { error } = await supabase.auth.signUp({ 
         email, 
         password,
@@ -118,8 +139,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         }
       });
       
+      if (!error) {
+        toast({
+          title: "Sign up successful",
+          description: "Please check your email to confirm your account or continue to login.",
+        });
+      }
+      
       return { error };
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Error during sign up:', error);
       toast({
         title: "Error signing up",
         description: error instanceof Error ? error.message : "Unknown error occurred",
@@ -130,7 +159,20 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
+    try {
+      await supabase.auth.signOut();
+      toast({
+        title: "Signed out",
+        description: "You have been successfully signed out.",
+      });
+    } catch (error) {
+      console.error('Error during sign out:', error);
+      toast({
+        title: "Error signing out",
+        description: "An error occurred while signing out",
+        variant: "destructive"
+      });
+    }
   };
 
   return (
