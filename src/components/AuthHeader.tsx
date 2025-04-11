@@ -45,6 +45,11 @@ const AuthHeader = () => {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>
+              <Link to="/user" className="w-full cursor-pointer">
+                Menu
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
               <Link to="/profile" className="w-full cursor-pointer">
                 Profile
               </Link>

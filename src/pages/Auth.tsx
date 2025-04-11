@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -63,7 +62,7 @@ const Auth = () => {
 
   useEffect(() => {
     if (session) {
-      navigate('/');
+      navigate('/user');
     }
   }, [session, navigate]);
 
@@ -83,7 +82,7 @@ const Auth = () => {
         title: "Login successful",
         description: "Welcome back!",
       });
-      navigate('/');
+      navigate('/user');
     }
   };
 
@@ -113,7 +112,7 @@ const Auth = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: window.location.origin,
+          redirectTo: `${window.location.origin}/user`,
         }
       });
       
