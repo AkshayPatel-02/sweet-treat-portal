@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Menu, X, ShoppingBag } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -7,9 +7,27 @@ import AuthHeader from './AuthHeader';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 10) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
 
   return (
-    <header className="bg-background/80 md:backdrop-blur-md sticky top-0 z-50 border-b w-full">
+    <header className={`sticky top-0 z-50 w-full transition-all duration-300 ${
+      isScrolled ? 'bg-background/70 backdrop-blur-md shadow-sm' : 'bg-background/80 backdrop-blur-md'
+    }`}>
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
@@ -21,8 +39,8 @@ const Header = () => {
           <nav className="hidden md:flex space-x-8">
             <Link to="/" className="text-foreground hover:text-bakery-500 font-medium transition-colors">Home</Link>
             <Link to="/user" className="text-foreground hover:text-bakery-500 font-medium transition-colors">Menu</Link>
-            <Link to="#about" className="text-foreground hover:text-bakery-500 font-medium transition-colors">About</Link>
-            <Link to="#contact" className="text-foreground hover:text-bakery-500 font-medium transition-colors">Contact</Link>
+            <a href="#about" className="text-foreground hover:text-bakery-500 font-medium transition-colors">About</a>
+            <a href="#contact" className="text-foreground hover:text-bakery-500 font-medium transition-colors">Contact</a>
           </nav>
           
           {/* Action Buttons */}
@@ -54,8 +72,8 @@ const Header = () => {
             <nav className="flex flex-col space-y-4">
               <Link to="/" className="text-foreground hover:text-bakery-500 font-medium transition-colors px-4 py-2">Home</Link>
               <Link to="/user" className="text-foreground hover:text-bakery-500 font-medium transition-colors px-4 py-2">Menu</Link>
-              <Link to="#about" className="text-foreground hover:text-bakery-500 font-medium transition-colors px-4 py-2">About</Link>
-              <Link to="#contact" className="text-foreground hover:text-bakery-500 font-medium transition-colors px-4 py-2">Contact</Link>
+              <a href="#about" className="text-foreground hover:text-bakery-500 font-medium transition-colors px-4 py-2">About</a>
+              <a href="#contact" className="text-foreground hover:text-bakery-500 font-medium transition-colors px-4 py-2">Contact</a>
               <div className="flex px-4 mt-4">
                 <AuthHeader />
               </div>

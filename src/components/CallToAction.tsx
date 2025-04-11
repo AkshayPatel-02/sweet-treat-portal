@@ -1,24 +1,26 @@
 
 import React from 'react';
 import { Button } from '@/components/ui/button';
-import { ArrowRight } from 'lucide-react';
+import { useScrollAnimation } from '@/hooks/use-scroll-animation';
 
 const CallToAction = () => {
+  const { ref, isVisible } = useScrollAnimation(0.1);
+
   return (
-    <section className="bg-bakery-100 py-20">
-      <div className="container mx-auto px-4 text-center max-w-4xl">
-        <h2 className="text-bakery-800 mb-6">Ready to Order Your Sweet Treats?</h2>
-        <p className="text-lg text-muted-foreground mb-10 max-w-2xl mx-auto">
-          Pre-order your favorite cakes, pastries, and chocolates for your special occasions.
-          Our treats are freshly made just for you!
+    <section 
+      ref={ref as React.RefObject<HTMLElement>} 
+      className={`bg-bakery-500 text-white py-20 transition-all duration-1000 transform ${
+        isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'
+      }`}
+    >
+      <div className="container mx-auto px-4 text-center">
+        <h2 className="text-3xl md:text-4xl font-bold mb-6">Ready to Treat Yourself?</h2>
+        <p className="text-xl mb-8 max-w-2xl mx-auto">
+          Pre-order your favorite treats today and experience the magic of our freshly baked goods.
         </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button className="btn-bakery">
-            Pre-order Now <ArrowRight className="ml-2 h-5 w-5" />
-          </Button>
-          <Button variant="outline" className="btn-outline">
-            Contact Us
-          </Button>
+        <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <Button className="bg-white text-bakery-500 hover:bg-cream-100">Order Now</Button>
+          <Button variant="outline" className="border-white text-white hover:bg-bakery-600">View Menu</Button>
         </div>
       </div>
     </section>
