@@ -11,7 +11,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 
 const AuthHeader = () => {
   const { user, profile, signOut } = useAuth();
@@ -35,18 +35,32 @@ const AuthHeader = () => {
                   user?.email === 'admin@sweettreats.com' || 
                   user?.email === 'akshaypatelchadal@gmail.com';
 
+  const getUserAvatarUrl = () => {
+    // If using Google OAuth, get avatar from user_metadata
+    if (user?.app_metadata?.provider === 'google' && user?.user_metadata?.avatar_url) {
+      return user.user_metadata.avatar_url;
+    }
+    return null;
+  };
+
+  const avatarUrl = getUserAvatarUrl();
+
   return (
     <div className="flex items-center space-x-2">
       {user ? (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Avatar className="cursor-pointer">
+              {avatarUrl ? (
+                <AvatarImage src={avatarUrl} alt="User avatar" />
+              ) : null}
               <AvatarFallback>{getInitials()}</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>
-              {profile ? `${profile.first_name} ${profile.last_name}` : user.email}
+              {user?.user_metadata?.full_name || 
+               (profile ? `${profile.first_name} ${profile.last_name}` : user.email)}
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem asChild>

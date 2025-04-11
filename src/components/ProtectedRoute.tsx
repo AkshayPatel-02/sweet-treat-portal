@@ -14,8 +14,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, adminOnly = f
   const { toast } = useToast();
   const navigate = useNavigate();
 
-  // Special admin access by email
-  const isAdmin = profile?.role === 'admin' || user?.email === 'admin@sweettreats.com' || 
+  // Special admin access by email - add the new email
+  const isAdmin = profile?.role === 'admin' || 
+                  user?.email === 'admin@sweettreats.com' || 
                   user?.email === 'akshaypatelchadal@gmail.com';
 
   useEffect(() => {
@@ -32,7 +33,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, adminOnly = f
         variant: "destructive"
       });
     }
-  }, [loading, session, adminOnly, isAdmin]);
+  }, [loading, session, adminOnly, isAdmin, toast]);
 
   if (loading) {
     return (

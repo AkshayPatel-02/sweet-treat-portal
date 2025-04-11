@@ -77,6 +77,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
       if (error) {
         console.error('Error fetching profile:', error);
+        
+        // For new OAuth users, we might need to create a profile
+        if (error.code === 'PGRST116') {
+          createInitialProfile(userId);
+        }
         return;
       }
       
@@ -84,6 +89,45 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setProfile(data as Profile);
     } catch (error) {
       console.error('Error fetching profile:', error);
+    }
+  };
+
+  const createInitialProfile = async (userId: string) => {
+    try {
+      // Get user data for name information
+      const { data: userData } = await supabase.auth.getUser();
+      const user = userData?.user;
+      
+      if (!user) return;
+      
+      // Extract name from user_metadata if available (Google auth provides this)
+      let firstName = '';
+      let lastName = '';
+      
+      if (user.user_metadata?.full_name) {
+        const nameParts = user.user_metadata.full_name.split(' ');
+        firstName = nameParts[0] || '';
+        lastName = nameParts.slice(1).join(' ') || '';
+      }
+      
+      // Create profile
+      const { error } = await supabase.from('profiles').insert({
+        id: userId,
+        first_name: firstName,
+        last_name: lastName,
+        created_at: new Date().toISOString()
+      });
+      
+      if (error) {
+        console.error('Error creating profile:', error);
+        return;
+      }
+      
+      // Fetch the newly created profile
+      fetchProfile(userId);
+      
+    } catch (error) {
+      console.error('Error creating initial profile:', error);
     }
   };
 

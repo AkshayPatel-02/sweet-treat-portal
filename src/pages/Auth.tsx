@@ -68,32 +68,42 @@ const Auth = () => {
   }, [session, navigate]);
 
   useEffect(() => {
-    const hashParams = new URLSearchParams(location.hash.substring(1));
-    const accessToken = hashParams.get('access_token');
-    const refreshToken = hashParams.get('refresh_token');
-    
-    if (accessToken && refreshToken) {
-      console.log('OAuth tokens found in URL, setting session');
-      supabase.auth.setSession({ 
-        access_token: accessToken, 
-        refresh_token: refreshToken 
-      }).then(({ error }) => {
-        if (error) {
-          console.error('Error setting session:', error);
-          toast({
-            title: "Authentication Error",
-            description: error.message || "There was an error with your login",
-            variant: "destructive",
-          });
-        } else {
-          console.log('Session set successfully, redirecting');
-          toast({
-            title: "Authentication Successful",
-            description: "You have been logged in successfully",
-          });
-          navigate('/user');
-        }
-      });
+    if (location.hash && location.hash.includes('access_token')) {
+      console.log('OAuth tokens detected in URL');
+      
+      const hashParams = new URLSearchParams(location.hash.substring(1));
+      const accessToken = hashParams.get('access_token');
+      const refreshToken = hashParams.get('refresh_token');
+      
+      if (accessToken && refreshToken) {
+        console.log('Setting session with tokens from OAuth provider');
+        
+        supabase.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken
+        }).then(({ data, error }) => {
+          if (error) {
+            console.error('Error setting session:', error);
+            toast({
+              title: "Authentication Error",
+              description: error.message || "There was an error with your login",
+              variant: "destructive",
+            });
+          } else {
+            console.log('Session set successfully from OAuth, data:', data);
+            toast({
+              title: "Sign in successful",
+              description: "You have been logged in",
+            });
+            
+            if (window.history && window.history.replaceState) {
+              window.history.replaceState({}, document.title, window.location.pathname);
+            }
+            
+            navigate('/user');
+          }
+        });
+      }
     }
   }, [location, navigate, toast]);
 
@@ -149,7 +159,7 @@ const Auth = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/user`,
+          redirectTo: `${window.location.origin}/auth`,
         }
       });
       
@@ -163,7 +173,6 @@ const Auth = () => {
         description: error instanceof Error ? error.message : "An error occurred during sign-in",
         variant: "destructive",
       });
-    } finally {
       setIsGoogleLoading(false);
     }
   };

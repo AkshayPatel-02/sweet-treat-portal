@@ -3,76 +3,58 @@ import React from 'react';
 import { useScrollAnimation } from '@/hooks/use-scroll-animation';
 
 const AboutSection = () => {
-  const { ref: ref1, isVisible: isVisible1 } = useScrollAnimation(0.1);
-  const { ref: ref2, isVisible: isVisible2 } = useScrollAnimation(0.1);
-  const { ref: ref3, isVisible: isVisible3 } = useScrollAnimation(0.1);
+  const { ref: titleRef, visible: titleVisible } = useScrollAnimation();
+  const { ref: textRef, visible: textVisible } = useScrollAnimation();
+  const { ref: imageRef, visible: imageVisible } = useScrollAnimation();
 
   return (
-    <section id="about" className="section-padding bg-background">
+    <section id="about" className="py-16 bg-background">
       <div className="container mx-auto px-4">
-        <div 
-          ref={ref1 as React.RefObject<HTMLDivElement>}
-          className={`text-center max-w-3xl mx-auto mb-16 transition-all duration-700 transform ${
-            isVisible1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-          }`}
-        >
-          <h2 className="text-bakery-800 mb-4">About Sweet Treats</h2>
-          <p className="text-muted-foreground">
-            We are passionate about creating delicious, handcrafted treats that bring joy to your special moments. 
-            Our journey started with a love for baking and has grown into a beloved local business.
-          </p>
-        </div>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          <div 
-            ref={ref2 as React.RefObject<HTMLDivElement>}
-            className={`text-center p-6 transition-all duration-700 delay-100 transform ${
-              isVisible2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-          >
-            <div className="bg-cream-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-10 h-10 text-bakery-500" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 3.5a6.5 6.5 0 00-6.5 6.5c0 1.5.5 2.9 1.4 4l.6.8-1.2 3.5 3.5-1.2.8.6a6.5 6.5 0 009.9-5.6 6.5 6.5 0 00-6.5-6.5zm2.9 8.8l-1.1.4a3.4 3.4 0 01-2.8-.2 6 6 0 01-2.4-2.4 3.4 3.4 0 01-.2-2.8l.4-1.1a.5.5 0 01.6-.3l1.5.5a.5.5 0 01.3.7l-.3.7a.3.3 0 00-.1.2l1.3 1.3a.3.3 0 00.2 0l.7-.3a.5.5 0 01.7.3l.5 1.5a.5.5 0 01-.3.6z"/>
-              </svg>
+        <div className="flex flex-col md:flex-row items-center gap-8">
+          <div className="w-full md:w-1/2">
+            <div 
+              ref={titleRef} 
+              className={`transition-all duration-1000 transform ${
+                titleVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+              }`}
+            >
+              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-primary">Our Sweet Story</h2>
+              <div className="w-20 h-1 bg-bakery-500 mb-6"></div>
             </div>
-            <h3 className="text-xl font-bold mb-2">Quality Ingredients</h3>
-            <p className="text-muted-foreground">
-              We use only premium, locally-sourced ingredients to ensure the best taste and quality in every bite.
-            </p>
+            <div 
+              ref={textRef}
+              className={`space-y-4 transition-all duration-1000 delay-300 transform ${
+                textVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
+              }`}
+            >
+              <p className="text-muted-foreground">
+                Founded in 2010, Sweet Treats Bakery began as a small family-owned shop dedicated to creating 
+                delicious, handcrafted desserts made from the finest ingredients.
+              </p>
+              <p className="text-muted-foreground">
+                Every day, our pastry chefs wake up early to prepare fresh, mouthwatering treats that bring joy 
+                to our community. From classic recipes passed down through generations to innovative 
+                creations that push the boundaries of flavor, we take pride in every item that leaves our kitchen.
+              </p>
+              <p className="text-muted-foreground">
+                Our commitment to quality extends beyond our ingredients to the warm, welcoming experience we 
+                provide. We believe in creating not just desserts, but moments of happiness that bring people together.
+              </p>
+            </div>
           </div>
-          
-          <div 
-            ref={ref2 as React.RefObject<HTMLDivElement>}
-            className={`text-center p-6 transition-all duration-700 delay-200 transform ${
-              isVisible2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-          >
-            <div className="bg-mint-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-10 h-10 text-mint-600" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M3.8 3.8a1 1 0 011.4 0L10 8.6l4.8-4.8a1 1 0 111.4 1.4L11.4 10l4.8 4.8a1 1 0 01-1.4 1.4L10 11.4l-4.8 4.8a1 1 0 01-1.4-1.4L8.6 10 3.8 5.2a1 1 0 010-1.4z"/>
-              </svg>
+          <div className="w-full md:w-1/2 mt-8 md:mt-0">
+            <div 
+              ref={imageRef}
+              className={`rounded-lg overflow-hidden shadow-lg transition-all duration-1000 delay-500 transform ${
+                imageVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'
+              }`}
+            >
+              <img 
+                src="https://images.unsplash.com/photo-1568254183919-78a4f43a2877?ixlib=rb-4.0.3&auto=format&fit=crop&w=1050&q=80" 
+                alt="Bakery interior with pastry chefs working" 
+                className="w-full h-auto object-cover"
+              />
             </div>
-            <h3 className="text-xl font-bold mb-2">Custom Orders</h3>
-            <p className="text-muted-foreground">
-              From weddings to birthdays, we create custom treats tailored to your specific occasion and preferences.
-            </p>
-          </div>
-          
-          <div 
-            ref={ref3 as React.RefObject<HTMLDivElement>}
-            className={`text-center p-6 transition-all duration-700 delay-300 transform ${
-              isVisible3 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-            }`}
-          >
-            <div className="bg-bakery-100 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
-              <svg className="w-10 h-10 text-bakery-500" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12zm1-6a1 1 0 10-2 0v2.59l-1.3-1.3a1 1 0 00-1.4 1.42l3 3a1 1 0 001.4 0l3-3a1 1 0 00-1.4-1.42L11 12.6V10z"/>
-              </svg>
-            </div>
-            <h3 className="text-xl font-bold mb-2">Fresh Daily</h3>
-            <p className="text-muted-foreground">
-              Every item is baked fresh daily, ensuring you receive the highest quality treats at their peak freshness.
-            </p>
           </div>
         </div>
       </div>
