@@ -1,26 +1,28 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Menu, X, ShoppingBag, User } from 'lucide-react';
+import { Menu, X, ShoppingBag } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import AuthHeader from './AuthHeader';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <header className="bg-background/95 backdrop-blur-sm sticky top-0 z-50 border-b">
+    <header className="bg-background/95 backdrop-blur-sm sticky top-0 z-50 border-b w-full">
       <div className="container mx-auto px-4 py-4">
         <div className="flex items-center justify-between">
           {/* Logo */}
-          <a href="/" className="flex items-center">
+          <Link to="/" className="flex items-center">
             <h1 className="text-2xl font-bold font-serif text-bakery-800">Sweet <span className="text-bakery-500">Treats</span></h1>
-          </a>
+          </Link>
           
           {/* Desktop Navigation */}
           <nav className="hidden md:flex space-x-8">
-            <a href="/" className="text-foreground hover:text-bakery-500 font-medium transition-colors">Home</a>
-            <a href="#menu" className="text-foreground hover:text-bakery-500 font-medium transition-colors">Menu</a>
-            <a href="#about" className="text-foreground hover:text-bakery-500 font-medium transition-colors">About</a>
-            <a href="#contact" className="text-foreground hover:text-bakery-500 font-medium transition-colors">Contact</a>
+            <Link to="/" className="text-foreground hover:text-bakery-500 font-medium transition-colors">Home</Link>
+            <Link to="#menu" className="text-foreground hover:text-bakery-500 font-medium transition-colors">Menu</Link>
+            <Link to="#about" className="text-foreground hover:text-bakery-500 font-medium transition-colors">About</Link>
+            <Link to="#contact" className="text-foreground hover:text-bakery-500 font-medium transition-colors">Contact</Link>
           </nav>
           
           {/* Action Buttons */}
@@ -28,13 +30,14 @@ const Header = () => {
             <Button variant="ghost" className="rounded-full p-2">
               <ShoppingBag className="h-5 w-5" />
             </Button>
-            <Button className="bg-bakery-500 hover:bg-bakery-600 rounded-full">
-              <User className="h-5 w-5 mr-2" /> Login
-            </Button>
+            <AuthHeader />
           </div>
           
           {/* Mobile Menu Button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center space-x-2">
+            <Button variant="ghost" className="rounded-full p-2">
+              <ShoppingBag className="h-5 w-5" />
+            </Button>
             <Button 
               variant="ghost" 
               className="p-2" 
@@ -49,17 +52,12 @@ const Header = () => {
         {isMenuOpen && (
           <div className="md:hidden py-4 mt-2 border-t">
             <nav className="flex flex-col space-y-4">
-              <a href="/" className="text-foreground hover:text-bakery-500 font-medium transition-colors px-4 py-2">Home</a>
-              <a href="#menu" className="text-foreground hover:text-bakery-500 font-medium transition-colors px-4 py-2">Menu</a>
-              <a href="#about" className="text-foreground hover:text-bakery-500 font-medium transition-colors px-4 py-2">About</a>
-              <a href="#contact" className="text-foreground hover:text-bakery-500 font-medium transition-colors px-4 py-2">Contact</a>
-              <div className="flex space-x-4 mt-4 px-4">
-                <Button variant="ghost" className="rounded-full p-2">
-                  <ShoppingBag className="h-5 w-5" />
-                </Button>
-                <Button className="bg-bakery-500 hover:bg-bakery-600 rounded-full">
-                  <User className="h-5 w-5 mr-2" /> Login
-                </Button>
+              <Link to="/" className="text-foreground hover:text-bakery-500 font-medium transition-colors px-4 py-2">Home</Link>
+              <Link to="#menu" className="text-foreground hover:text-bakery-500 font-medium transition-colors px-4 py-2">Menu</Link>
+              <Link to="#about" className="text-foreground hover:text-bakery-500 font-medium transition-colors px-4 py-2">About</Link>
+              <Link to="#contact" className="text-foreground hover:text-bakery-500 font-medium transition-colors px-4 py-2">Contact</Link>
+              <div className="flex px-4 mt-4">
+                <AuthHeader />
               </div>
             </nav>
           </div>
