@@ -3,9 +3,9 @@ import React from 'react';
 import { useScrollAnimation } from '@/hooks/use-scroll-animation';
 
 const AboutSection = () => {
-  const { ref: titleRef, visible: titleVisible } = useScrollAnimation();
-  const { ref: textRef, visible: textVisible } = useScrollAnimation();
-  const { ref: imageRef, visible: imageVisible } = useScrollAnimation();
+  const { ref: titleRef, isVisible: titleVisible } = useScrollAnimation();
+  const { ref: textRef, isVisible: textVisible } = useScrollAnimation();
+  const { ref: imageRef, isVisible: imageVisible } = useScrollAnimation();
 
   return (
     <section id="about" className="py-16 bg-background">
@@ -13,7 +13,7 @@ const AboutSection = () => {
         <div className="flex flex-col md:flex-row items-center gap-8">
           <div className="w-full md:w-1/2">
             <div 
-              ref={titleRef} 
+              ref={titleRef as React.RefObject<HTMLDivElement>} 
               className={`transition-all duration-1000 transform ${
                 titleVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
               }`}
@@ -22,7 +22,7 @@ const AboutSection = () => {
               <div className="w-20 h-1 bg-bakery-500 mb-6"></div>
             </div>
             <div 
-              ref={textRef}
+              ref={textRef as React.RefObject<HTMLDivElement>}
               className={`space-y-4 transition-all duration-1000 delay-300 transform ${
                 textVisible ? 'translate-y-0 opacity-100' : 'translate-y-10 opacity-0'
               }`}
@@ -44,7 +44,7 @@ const AboutSection = () => {
           </div>
           <div className="w-full md:w-1/2 mt-8 md:mt-0">
             <div 
-              ref={imageRef}
+              ref={imageRef as React.RefObject<HTMLDivElement>}
               className={`rounded-lg overflow-hidden shadow-lg transition-all duration-1000 delay-500 transform ${
                 imageVisible ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0'
               }`}

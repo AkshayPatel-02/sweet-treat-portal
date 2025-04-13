@@ -36,13 +36,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "order_items_order_id_fkey"
-            columns: ["order_id"]
-            isOneToOne: false
-            referencedRelation: "orders"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "order_items_product_id_fkey"
             columns: ["product_id"]
             isOneToOne: false
@@ -53,39 +46,49 @@ export type Database = {
       }
       orders: {
         Row: {
-          created_at: string
-          delivery_address: string | null
-          delivery_date: string | null
+          created_at: string | null
+          formatted_order_id: string | null
           id: string
-          payment_id: string | null
-          payment_status: string
+          pickup_date: string
+          pickup_time: string
+          product_id: string | null
+          quantity: number
           status: string
-          total_amount: number
-          user_id: string
+          updated_at: string | null
+          user_id: string | null
         }
         Insert: {
-          created_at?: string
-          delivery_address?: string | null
-          delivery_date?: string | null
+          created_at?: string | null
+          formatted_order_id?: string | null
           id?: string
-          payment_id?: string | null
-          payment_status?: string
+          pickup_date: string
+          pickup_time: string
+          product_id?: string | null
+          quantity?: number
           status?: string
-          total_amount: number
-          user_id: string
+          updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
-          created_at?: string
-          delivery_address?: string | null
-          delivery_date?: string | null
+          created_at?: string | null
+          formatted_order_id?: string | null
           id?: string
-          payment_id?: string | null
-          payment_status?: string
+          pickup_date?: string
+          pickup_time?: string
+          product_id?: string | null
+          quantity?: number
           status?: string
-          total_amount?: number
-          user_id?: string
+          updated_at?: string | null
+          user_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "orders_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "orders_user_id_fkey"
             columns: ["user_id"]
@@ -98,6 +101,7 @@ export type Database = {
       products: {
         Row: {
           available: boolean | null
+          badge: string | null
           category: string | null
           created_at: string
           description: string | null
@@ -108,6 +112,7 @@ export type Database = {
         }
         Insert: {
           available?: boolean | null
+          badge?: string | null
           category?: string | null
           created_at?: string
           description?: string | null
@@ -118,6 +123,7 @@ export type Database = {
         }
         Update: {
           available?: boolean | null
+          badge?: string | null
           category?: string | null
           created_at?: string
           description?: string | null
