@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -30,6 +29,11 @@ const App: React.FC = () => {
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/user" element={
+                <ProtectedRoute>
+                  <User />
+                </ProtectedRoute>
+              } />
+              <Route path="/menu" element={
                 <ProtectedRoute>
                   <User />
                 </ProtectedRoute>
