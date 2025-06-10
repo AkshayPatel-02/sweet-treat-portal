@@ -1,15 +1,12 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const HeroSection = () => {
   const canvasRef = useRef<HTMLDivElement>(null);
   const [modelLoading, setModelLoading] = useState(true);
-  const [modelError, setModelError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -66,75 +63,6 @@ const HeroSection = () => {
       });
     };
     
-    // Load the 3D model
-    const loader = new GLTFLoader();
-    
-    // You need to provide the correct path to your 3D model
-    // For example: '/models/strawberry_cake.glb'
-    const modelPath = '/models/strawberry_cake.glb';
-    
-    loader.load(
-      modelPath,
-      (gltf) => {
-        const model = gltf.scene;
-        
-        // Center and scale the model appropriately
-        model.scale.set(1.5, 1.5, 1.5);
-        
-        // Position adjustments if needed
-        model.position.set(0, 0, 0);
-        
-        // Optional: traverse the model to apply materials/textures
-        model.traverse((child) => {
-          if (child.isMesh) {
-            child.castShadow = true;
-            child.receiveShadow = true;
-          }
-        });
-        
-        // Add the model to the scene
-        scene.add(model);
-        
-        // Add glow effect to the model
-        createGlow(model);
-        
-        // Update loading state
-        setModelLoading(false);
-        
-        // Optional: fit camera to the model
-        const box = new THREE.Box3().setFromObject(model);
-        const center = box.getCenter(new THREE.Vector3());
-        const size = box.getSize(new THREE.Vector3());
-        
-        const maxDim = Math.max(size.x, size.y, size.z);
-        const fov = camera.fov * (Math.PI / 180);
-        let cameraDistance = maxDim / (2 * Math.tan(fov / 2));
-        
-        // Add some padding
-        cameraDistance *= 1.5;
-        
-        camera.position.set(center.x, center.y, center.z + cameraDistance);
-        camera.lookAt(center);
-        controls.target.copy(center);
-        
-        controls.update();
-      },
-      (xhr) => {
-        // Loading progress
-        console.log((xhr.loaded / xhr.total * 100) + '% loaded');
-      },
-      (error) => {
-        // Error handling
-        console.error('Error loading model:', error);
-        setModelError('Failed to load 3D model');
-        setModelLoading(false);
-        
-        // Fallback to the simple cake representation if model loading fails
-        const cakeGroup = createFallbackCake();
-        scene.add(cakeGroup);
-      }
-    );
-    
     // Fallback cake creation function
     const createFallbackCake = () => {
       const cakeGroup = new THREE.Group();
@@ -143,12 +71,16 @@ const HeroSection = () => {
         new THREE.CylinderGeometry(2, 2, 1, 32),
         new THREE.MeshLambertMaterial({ color: 0xf8d7da })
       );
+      cakeBase.castShadow = true;
+      cakeBase.receiveShadow = true;
       
       const cakeTop = new THREE.Mesh(
         new THREE.CylinderGeometry(1.8, 1.8, 0.7, 32),
         new THREE.MeshLambertMaterial({ color: 0xf5b8bd })
       );
       cakeTop.position.y = 0.85;
+      cakeTop.castShadow = true;
+      cakeTop.receiveShadow = true;
       
       const cakeBerry = new THREE.Mesh(
         new THREE.SphereGeometry(0.3, 32, 16),
@@ -156,6 +88,8 @@ const HeroSection = () => {
       );
       cakeBerry.position.y = 1.7;
       cakeBerry.position.x = 0.5;
+      cakeBerry.castShadow = true;
+      cakeBerry.receiveShadow = true;
       
       const cakeBerry2 = new THREE.Mesh(
         new THREE.SphereGeometry(0.2, 32, 16),
@@ -163,6 +97,8 @@ const HeroSection = () => {
       );
       cakeBerry2.position.y = 1.6;
       cakeBerry2.position.x = -0.4;
+      cakeBerry2.castShadow = true;
+      cakeBerry2.receiveShadow = true;
       
       cakeGroup.add(cakeBase);
       cakeGroup.add(cakeTop);
@@ -171,6 +107,16 @@ const HeroSection = () => {
       
       return cakeGroup;
     };
+    
+    // Create and add the fallback cake directly
+    const cakeGroup = createFallbackCake();
+    scene.add(cakeGroup);
+    
+    // Add glow effect to the cake
+    createGlow(cakeGroup);
+    
+    // Set loading to false since we're using the fallback
+    setModelLoading(false);
     
     // Set camera position
     camera.position.z = 6;
@@ -237,11 +183,6 @@ const HeroSection = () => {
               {modelLoading && (
                 <div className="absolute inset-0 flex items-center justify-center">
                   <div className="loader animate-spin w-10 h-10 border-4 border-bakery-200 rounded-full border-t-bakery-500"></div>
-                </div>
-              )}
-              {modelError && (
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <p className="text-bakery-500">{modelError}</p>
                 </div>
               )}
             </div>
